@@ -1,0 +1,78 @@
+/* ============================================================================
+   THE CHIGWELL MARQUEES — DESIGN TOKENS  (Master Prompt v2.0 §3)
+   Single source of truth. No component hard-codes a hex value.
+   Tailwind utilities are wired to these vars in app/globals.css (@theme inline).
+   ============================================================================ */
+
+:root {
+  /* ---- Canvas -------------------------------------------------------- */
+  --ivory: #fbf7f0;
+  --parchment: #f3ebdd;
+  --sand: #e7dcc9;
+
+  /* ---- Ink ----------------------------------------------------------- */
+  --ink: #211d17;
+  --ink-soft: #4a4339;
+  --taupe: #8b8170;
+
+  /* ---- Gold (primary accent — deliberate, never fill-spam) ----------- */
+  --gold: #b08d4f;
+  --champagne: #d8c39b;
+  --gold-deep: #8a6d34;
+
+  /* ---- Sage (English-garden secondary) ------------------------------- */
+  --sage: #8e9b82;
+  --sage-deep: #5e6b52;
+  --sage-light: #c3cdb6;
+
+  /* ---- Blush (romantic whisper) -------------------------------------- */
+  --blush: #e6c9c1;
+  --rose: #c99a91;
+  --rose-deep: #a9756c;
+
+  /* ---- System -------------------------------------------------------- */
+  --focus-ring: #8a6d34;
+  --overlay: color-mix(in oklab, var(--ink) 55%, transparent);
+
+  /* ---- Fluid type scale (clamp) §3.2 --------------------------------- */
+  --step--1: clamp(0.83rem, 0.79rem + 0.18vw, 0.94rem);
+  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.13rem);
+  --step-1: clamp(1.33rem, 1.22rem + 0.6vw, 1.78rem);
+  --step-2: clamp(1.78rem, 1.5rem + 1.4vw, 2.84rem);
+  --step-3: clamp(2.37rem, 1.9rem + 2.6vw, 4.5rem);
+  --step-4: clamp(3.16rem, 2.2rem + 5vw, 7.1rem);
+  --step-5: clamp(4.2rem, 2.4rem + 9vw, 11rem);
+
+  /* ---- Spacing & rhythm §3.3 ----------------------------------------- */
+  --space-base: 0.5rem; /* 8px */
+  --section-y: clamp(6rem, 12vh, 11rem);
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --measure: 68ch;
+
+  /* ---- Radius (architectural / sharp) -------------------------------- */
+  --radius-input: 3px;
+  --radius-card: 4px;
+
+  /* ---- Elevation (warm, whisper-soft) -------------------------------- */
+  --shadow-soft: 0 30px 60px -30px rgba(33, 29, 23, 0.25);
+  --shadow-raise: 0 18px 40px -24px rgba(33, 29, 23, 0.3);
+
+  /* ---- Hairline rule §3.3 -------------------------------------------- */
+  --hairline: 1px solid var(--champagne);
+
+  /* ---- Motion §3.4 --------------------------------------------------- */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-reveal: 0.85s;
+  --dur-micro: 0.28s;
+  --stagger: 75ms;
+
+  /* ---- Z-index scale ------------------------------------------------- */
+  --z-cursor: 90;
+  --z-announcement: 40;
+  --z-header: 50;
+  --z-drawer: 70;
+  --z-overlay: 60;
+
+  /* ---- Texture intensity §3.3 --------------------------------------- */
+  --grain-opacity: 0.04;
+}
