@@ -196,7 +196,9 @@ export function EnquiryProvider({ children }: { children: React.ReactNode }) {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-7 py-6">
+        {/* data-lenis-prevent: let this panel scroll natively — Lenis otherwise
+            hijacks wheel/touch globally and the drawer can't scroll on its own. */}
+        <div data-lenis-prevent className="flex-1 overflow-y-auto px-7 py-6">
           {state === "success" ? (
             <div className="flex h-full flex-col items-center justify-center text-center">
               <FlourishDivider />

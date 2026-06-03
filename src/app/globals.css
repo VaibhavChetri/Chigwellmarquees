@@ -220,10 +220,15 @@ video {
   }
 }
 
-/* Editorial Rise — line-by-line headline mask reveal (§3.4) */
+/* Editorial Rise — line-by-line headline mask reveal (§3.4). The overflow clip
+   masks the slide-up; with tight display leading (e.g. leading-[0.95]) it also
+   clips glyph descenders (the "g" in "begins"), so reserve room below the line
+   and pull it back with a matching negative margin (layout/leading unchanged). */
 .rise-line {
   display: block;
   overflow: hidden;
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
 }
 .rise-line > * {
   display: block;
