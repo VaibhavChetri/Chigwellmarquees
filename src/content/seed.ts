@@ -55,15 +55,15 @@ export const media: MediaAsset[] = [
     // missing/placeholder src degrades gracefully to the poster (no CLS).
     id: "m-hero-video",
     type: "video",
-    // The hero is the authentic Secret Garden gazebo at dusk — dark trees +
-    // dramatic sky give the headline its negative space and keep text legible
-    // (§3.5). No background video: the only real clips are portrait reels that
-    // crop poorly full-bleed; they're surfaced in the social wall instead.
-    url: "",
-    posterUrl: "/media/secret-garden-gazebo.jpg",
-    alt: "A couple in the Secret Garden gazebo at dusk, Chigwell Hall",
+    // Real Chigwell footage — an evening in the marquee (draped ceiling, fairy
+    // lights, banquet). Portrait reel shown full-bleed via object-cover; the
+    // poster is a frame from the same clip so poster→video is seamless. A top
+    // scrim keeps the nav legible and the title-shadow keeps the headline so.
+    url: "/media/marquee-evening.mp4",
+    posterUrl: "/media/marquee-evening-poster.jpg",
+    alt: "An evening reception in the marquee at Chigwell Hall",
     width: 1080,
-    height: 1350,
+    height: 1920,
     blurDataURL: BLUR,
   },
   img(

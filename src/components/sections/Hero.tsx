@@ -37,8 +37,33 @@ export function Hero({
 }) {
   const driftRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [revealed, setRevealed] = useState(false);
   const [videoSrc, setVideoSrc] = useState<string | null>(null);
+  const [soundOn, setSoundOn] = useState(false);
+
+  // The clip autoplays MUTED (browsers block unmuted autoplay); this toggle lets
+  // a visitor turn the original sound on/off via a user gesture (§ audio).
+  const toggleSound = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    const next = !soundOn;
+    v.muted = !next;
+    if (next) {
+      v.volume = 1;
+      void v.play().catch(() => {});
+    }
+    setSoundOn(next);
+  };
+
+  // Clicking anywhere on the hero toggles the audio — except on real controls
+  // (CTAs, the sound button, links) which keep their own behaviour. The visible
+  // sound button remains the keyboard-accessible affordance.
+  const onHeroClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (!videoSrc) return;
+    if ((e.target as HTMLElement).closest("a, button, input, select, textarea, [role='button']")) return;
+    toggleSound();
+  };
 
   const poster = media?.type === "video" ? media.posterUrl : media?.url;
   const posterAlt = media?.alt ?? "";
@@ -93,6 +118,7 @@ export function Hero({
     <section
       ref={sectionRef}
       data-dark-hero
+      onClick={onHeroClick}
       className="relative flex min-h-[100svh] items-end overflow-hidden"
     >
       {/* No OrnamentCorner here (§3.6 restraint): the script eyebrow already
@@ -107,7 +133,15 @@ export function Hero({
         )}
         style={{ clipPath: revealed ? "inset(0% 0% 0% 0%)" : "inset(0% 50% 0% 50%)" }}
       >
-        <div ref={driftRef} className="absolute inset-0 will-change-transform">
+        {/* Override the muted global image grade for the hero only: a richer,
+            punchier treatment so the (necessarily upscaled) reel reads crisp and
+            premium rather than flat. Cascades to the poster + <video> below via
+            the --media-grade var that `img,video { filter }` consumes. */}
+        <div
+          ref={driftRef}
+          className="absolute inset-0 will-change-transform"
+          style={{ ["--media-grade" as string]: "saturate(1.12) contrast(1.09) brightness(1.03)" } as React.CSSProperties}
+        >
           {poster && (
             <Image
               src={poster}
@@ -117,16 +151,18 @@ export function Hero({
               sizes="100vw"
               placeholder={media?.blurDataURL ? "blur" : "empty"}
               blurDataURL={media?.blurDataURL}
-              // Full-bleed art crop (§3.5): the portrait gazebo frame is biased
-              // up so the dramatic dusk sky sits behind the headline and the
-              // gazebo/couple rest behind the subhead.
-              className="object-cover object-[50%_46%]"
+              // Full-bleed crop (§3.5): the portrait reel is biased slightly
+              // above centre so the draped ceiling + lit room read behind the
+              // headline. The poster shares this crop with the <video> below so
+              // the poster→video hand-off is seamless.
+              className="object-cover object-[50%_40%]"
             />
           )}
           {videoSrc && (
             <video
+              ref={videoRef}
               aria-hidden="true"
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover object-[50%_40%]"
               autoPlay
               muted
               loop
@@ -134,6 +170,9 @@ export function Hero({
               preload="metadata"
               poster={poster}
             >
+              {/* MP4 (H.264) — broad compatibility. A WebM (VP9/AV1) source can
+                  be added here once ffmpeg is available for a smaller, sharper
+                  alternative (per the optimization guide). */}
               <source src={videoSrc} type="video/mp4" />
             </video>
           )}
@@ -150,6 +189,10 @@ export function Hero({
         <div className="absolute inset-0 bg-[radial-gradient(120%_100%_at_50%_42%,transparent_52%,rgba(33,29,23,0.40)_100%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(33,29,23,0.82)_0%,rgba(33,29,23,0.38)_40%,transparent_72%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(33,29,23,0.78)_0%,rgba(33,29,23,0.44)_28%,transparent_62%)]" />
+        {/* 5 · top scrim — the reel is bright (white drapes/chandeliers), so
+            darken the top strip where the transparent header's ivory nav sits so
+            it stays legible across the brightest frames of the clip. */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(33,29,23,0.66)_0%,rgba(33,29,23,0.5)_9%,transparent_20%)]" />
       </div>
 
       {/* Content */}
@@ -187,6 +230,35 @@ export function Hero({
           </Button>
         </div>
       </div>
+
+      {/* Sound toggle — only when the video is actually playing (suppressed
+          under reduced-motion / save-data, where no video attaches). Lets the
+          visitor hear the original audio via a user gesture. */}
+      {videoSrc && (
+        <button
+          type="button"
+          onClick={toggleSound}
+          aria-pressed={soundOn}
+          aria-label={soundOn ? "Turn off sound" : "Turn on sound"}
+          className="group absolute bottom-6 right-[var(--gutter)] z-10 grid h-11 w-11 place-items-center rounded-full border border-ivory/50 bg-[var(--overlay)] text-ivory backdrop-blur-sm transition-colors hover:border-champagne hover:text-champagne"
+        >
+          {soundOn ? (
+            // speaker on
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 5 6 9H3v6h3l5 4V5z" />
+              <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+              <path d="M18.5 6a9 9 0 0 1 0 12" />
+            </svg>
+          ) : (
+            // speaker muted
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 5 6 9H3v6h3l5 4V5z" />
+              <path d="m17 9 5 6" />
+              <path d="m22 9-5 6" />
+            </svg>
+          )}
+        </button>
+      )}
 
       {/* Scroll cue */}
       <div
