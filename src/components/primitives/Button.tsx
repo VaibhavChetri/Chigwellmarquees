@@ -10,16 +10,19 @@ type Variant = "primary" | "ghost";
 
 const VARIANTS: Record<Variant, string> = {
   primary:
-    "bg-ink text-ivory hover:bg-gold-deep border border-ink hover:border-gold-deep",
+    "bg-ink text-ivory hover:bg-gold-deep border border-ink hover:border-gold-deep hover:shadow-[var(--shadow-raise)]",
   ghost:
-    "bg-transparent text-ink border border-ink/30 hover:border-gold hover:text-gold-deep",
+    "bg-transparent text-ink border border-ink/30 hover:border-gold hover:text-gold-deep hover:bg-ink/[0.03]",
 };
 
 const baseClass = cn(
   "inline-flex items-center justify-center gap-2 select-none",
   "min-h-11 px-7 py-3 rounded-[var(--radius-input)]",
   "font-sans text-[0.82rem] uppercase tracking-[0.16em]",
-  "transition-colors duration-[var(--dur-micro)] ease-[var(--ease-cinematic)]",
+  // Refined hover: colour + a whisper-soft raise (§3.4). Reduced-motion users
+  // get no transition (suppressed globally); the magnetic primary keeps its
+  // cursor-tracking transform — these compose, they don't fight.
+  "transition-[color,background-color,border-color,box-shadow] duration-[var(--dur-micro)] ease-[var(--ease-cinematic)]",
   "will-change-transform",
 );
 

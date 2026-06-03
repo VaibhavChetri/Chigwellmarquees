@@ -70,6 +70,10 @@ body {
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Premium type rendering: let Fraunces use its optical-size axis and enable
+     kerning + ligatures so display headings feel hand-set (§3.2). */
+  font-optical-sizing: auto;
+  font-feature-settings: "kern", "liga", "calt";
   /* Faint paper grain across the whole canvas §3.3 */
   position: relative;
 }
@@ -120,6 +124,18 @@ video,
 svg {
   display: block;
   max-width: 100%;
+}
+
+/* §3.5 — ONE consistent warm editorial grade so mixed-source photography (real
+   Chigwell media + any stand-in stock) reads as a single, cohesive brand. Kept
+   deliberately subtle to preserve contrast/legibility. SVG ornaments are
+   excluded so their champagne/sage strokes stay true. Tune via --media-grade. */
+:root {
+  --media-grade: saturate(0.92) contrast(1.02) brightness(0.99) sepia(0.06);
+}
+img,
+video {
+  filter: var(--media-grade);
 }
 
 /* ============================================================================
